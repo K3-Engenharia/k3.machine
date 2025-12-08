@@ -84,8 +84,13 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3001;
 (async () => {
-  await runMigrations();
-  app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-  });
+  try {
+    await runMigrations();
+    app.listen(PORT, () => {
+      console.log(`Servidor rodando na porta ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Erro crítico ao iniciar servidor:', error);
+    process.exit(1);
+  }
 })();
