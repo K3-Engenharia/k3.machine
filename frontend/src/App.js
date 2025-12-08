@@ -13,9 +13,18 @@ import EmpresaForm from './pages/EmpresaForm';
 import AgendamentosCalendario from './pages/AgendamentosCalendario';
 import UsuarioCreate from './pages/UsuarioCreate';
 import TiposEquipamentoAdmin from './pages/TiposEquipamentoAdmin';
+import { startKeepAlive } from './services/keepAlive';
+
+let stopKeepAlive = null;
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
+  
+  // Iniciar keep-alive quando o usuário está autenticado
+  if (token && !stopKeepAlive) {
+    stopKeepAlive = startKeepAlive();
+  }
+  
   return token ? children : <Navigate to="/" />;
 }
 

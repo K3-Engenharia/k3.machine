@@ -42,6 +42,11 @@ app.get('/', (req, res) => {
   res.send('K3 Machine API rodando!');
 });
 
+// Rota de health check para keep-alive
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/dashboard', dashboardRoutes);
