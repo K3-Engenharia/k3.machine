@@ -15,34 +15,14 @@ dotenv.config();
 
 const app = express();
 
-// Configurar CORS para permitir Vercel e desenvolvimento
-const corsOptions = {
-  origin: function(origin, callback) {
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'https://k3-machine-on.vercel.app',
-      'https://k3-machine.vercel.app'
-    ];
-    
-    // Adicionar origem do Vercel dinamicamente
-    if (process.env.VERCEL_URL) {
-      allowedOrigins.push(`https://${process.env.VERCEL_URL}`);
-    }
-    
-    // Se não houver origin (requisições locais), permitir
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
+// Configurar CORS - Permitir todas as origens em produção
+app.use(cors({
+  origin: '*', // Permite todas as origens
+  credentials: false,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-};
+}));
 
-app.use(cors(corsOptions));
 app.use(express.json());
 // Servir arquivos estáticos da pasta uploads
 app.use('/api/uploads', express.static('public/uploads'));
