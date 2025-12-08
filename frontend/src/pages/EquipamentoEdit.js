@@ -59,12 +59,17 @@ export default function EquipamentoEdit() {
 
   const handleChange = e => {
     const { name, type, files, value } = e.target;
-    if (type === 'file') {
-      setForm(prev => ({
-        ...prev,
-        foto: files[0],
-        fotoPreview: files[0] ? URL.createObjectURL(files[0]) : null
-      }));
+    if (type === 'file' && files[0]) {
+      // Converter imagem para Base64
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setForm(prev => ({
+          ...prev,
+          foto: reader.result // Salvar como Base64
+        }));
+      };
+      reader.readAsDataURL(file);
     } else {
       setForm(prev => ({ ...prev, [name]: value }));
     }
@@ -77,26 +82,23 @@ export default function EquipamentoEdit() {
     try {
       const token = localStorage.getItem('token');
       
-      const formData = new FormData();
+      // Preparar dados sem campos internos
+      const dados = {};
       Object.keys(form).forEach(key => {
-        // Não enviar campos especiais
-        if (!['id', '_id', 'fotoPreview'].includes(key)) {
-          if (key === 'foto') {
-            if (form[key] && form[key] instanceof File) {
-              formData.append('foto', form[key]);
-            }
-          } else {
-            formData.append(key, form[key]);
-          }
+        if (!['_id', 'fotoPreview'].includes(key)) {
+          dados[key] = form[key];
         }
       });
+
+      console.log('Enviando dados:', { nome: dados.nome, empresa_id: dados.empresa_id, tipo: dados.tipo });
 
       const res = await fetch(`${API_URL}/api/equipamentos/${id}`, {
         method: 'PUT',
         headers: { 
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: formData
+        body: JSON.stringify(dados)
       });
       if (!res.ok) {
         const data = await res.json();
