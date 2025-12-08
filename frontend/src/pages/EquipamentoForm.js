@@ -52,11 +52,17 @@ export default function EquipamentoForm() {
 
   const handleChange = (e) => {
     const { name, type, files, value } = e.target;
-    if (type === 'file') {
-      setForm(prev => ({
-        ...prev,
-        foto: files[0]
-      }));
+    if (type === 'file' && files[0]) {
+      // Converter imagem para Base64
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setForm(prev => ({
+          ...prev,
+          foto: reader.result // Salvar como Base64
+        }));
+      };
+      reader.readAsDataURL(file);
     } else {
       setForm(prev => ({
         ...prev,
@@ -71,30 +77,15 @@ export default function EquipamentoForm() {
     setError('');
 
     try {
-      const formData = new FormData();
-      Object.keys(form).forEach(key => {
-        if (key === 'foto') {
-          if (form[key]) {
-            formData.append('foto', form[key]);
-          }
-        } else {
-          formData.append(key, form[key]);
-        }
-      });
-
       const token = localStorage.getItem('token');
-      console.log('FormData entries:');
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-      }
 
       const res = await fetch(`${API_URL}/api/equipamentos`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          // Removido Content-Type para deixar o navegador definir automaticamente com o boundary correto
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: formData
+        body: JSON.stringify(form)
       });
 
       if (!res.ok) {

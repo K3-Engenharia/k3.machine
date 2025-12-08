@@ -8,11 +8,10 @@ export async function cadastrarEquipamento(req, res) {
       return res.status(400).json({ message: 'Nome, tipo e empresa são obrigatórios' });
     }
 
-    // Adiciona o caminho da foto se uma imagem foi enviada
-    if (req.file) {
-      equip.foto = `/uploads/${req.file.filename}`;
-    } else {
-      equip.foto = null; // Imagem padrão será usada no frontend
+    // A foto já vem como Base64 no req.body (se foi enviada)
+    // Se não tiver foto, deixa como null
+    if (!equip.foto) {
+      equip.foto = null;
     }
 
     const novo = await createEquipamento(equip);
@@ -107,7 +106,7 @@ export async function atualizarEquipamento(req, res) {
     }
 
     // Se não enviou foto nova, mantém a foto atual
-    if (!req.file && equipamentoExistente.foto) {
+    if (!equip.foto && equipamentoExistente.foto) {
       equip.foto = equipamentoExistente.foto;
     }
 

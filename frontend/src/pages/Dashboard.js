@@ -150,7 +150,7 @@ export default function Dashboard() {
             <Card sx={{ minHeight: 200, boxShadow: 3, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <Box sx={{ height: 200, overflow: 'hidden', borderRadius: 1, mb: 1 }}>
                 <img
-                  src={e.foto ? `${API_URL}/api${e.foto}` : `${API_URL}/api/uploads/placeholder.png`}
+                  src={e.foto || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e0e0e0" width="400" height="300"/%3E%3C/svg%3E'}
                   alt={e.nome}
                   style={{
                     width: '100%',
