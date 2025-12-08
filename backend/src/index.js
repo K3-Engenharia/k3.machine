@@ -23,7 +23,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json());
+// Aumentar limite para suportar imagens Base64
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 // Servir arquivos estáticos da pasta uploads
 app.use('/api/uploads', express.static('public/uploads'));
 

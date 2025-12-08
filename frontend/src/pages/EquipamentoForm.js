@@ -53,14 +53,41 @@ export default function EquipamentoForm() {
   const handleChange = (e) => {
     const { name, type, files, value } = e.target;
     if (type === 'file' && files[0]) {
-      // Converter imagem para Base64
+      // Converter imagem para Base64 e comprimir
       const file = files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
-        setForm(prev => ({
-          ...prev,
-          foto: reader.result // Salvar como Base64
-        }));
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Redimensionar para máximo 800px de largura mantendo proporção
+          let width = img.width;
+          let height = img.height;
+          const maxWidth = 800;
+          
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Converter para Base64 com compressão (qualidade 0.7)
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          
+          console.log('Tamanho original:', file.size, 'bytes');
+          console.log('Tamanho comprimido:', compressedBase64.length, 'caracteres (~' + Math.round(compressedBase64.length / 1.33 / 1024) + ' KB)');
+          
+          setForm(prev => ({
+            ...prev,
+            foto: compressedBase64
+          }));
+        };
+        img.src = reader.result;
       };
       reader.readAsDataURL(file);
     } else {
