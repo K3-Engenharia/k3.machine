@@ -1,0 +1,21 @@
+# node_modules (não deve ser comitado nunca)
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# arquivos de build
+dist/
+build/
+
+# arquivos de ambiente
+.env
+.env.local
+.env.development
+.env.production
+
+# logs
+*.log
+
+# sistema operacional
+.DS_Store
+Thumbs.db

@@ -1,0 +1,12 @@
+# Ignora dependências
+node_modules/
+
+# Ignora binários nativos
+*.node
+
+# Ignora banco SQLite local
+*.db
+db/*.db
+
+# Ignora variáveis de ambiente
+.env
