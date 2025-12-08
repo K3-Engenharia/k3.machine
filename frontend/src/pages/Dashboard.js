@@ -148,7 +148,7 @@ export default function Dashboard() {
               {equipamentosEmpresa.map(e => {
                 console.log('Equipamento:', e.nome, 'Foto presente:', !!e.foto, 'Tamanho foto:', e.foto ? e.foto.length : 0);
                 return (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={e.id}>
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={e.id}>
             <Card sx={{ minHeight: 200, boxShadow: 3, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <Box sx={{ height: 200, overflow: 'hidden', borderRadius: 1, mb: 1, backgroundColor: '#f0f0f0' }}>
                 {e.foto && e.foto.startsWith('data:') ? (
@@ -269,10 +269,11 @@ export default function Dashboard() {
                     return null;
                   }
                 })()}
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+                  </CardContent>
+                </Card>
+              </Grid>
+                );
+              })}
             </Grid>
 
             {/* Adiciona uma divisória entre as seções de empresas */}
