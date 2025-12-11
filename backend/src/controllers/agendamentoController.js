@@ -46,8 +46,8 @@ export async function editarAgendamento(req, res) {
 
 export async function alterarStatusAgendamento(req, res) {
   try {
-    const { status } = req.body;
-    const atualizado = await atualizarStatusAgendamento(req.params.agendamentoId, status);
+    const { status, observacoes } = req.body;
+    const atualizado = await atualizarStatusAgendamento(req.params.agendamentoId, status, observacoes);
     res.json(atualizado);
   } catch (e) {
     res.status(500).json({ message: 'Erro ao atualizar status do agendamento' });

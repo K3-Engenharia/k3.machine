@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Paper, Typography, CircularProgress, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip } from '@mui/material';
+import { Box, Paper, Typography, CircularProgress, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import API_URL from '../services/apiConfig.js';
 import EditIcon from '@mui/icons-material/Edit';
@@ -20,6 +20,9 @@ export default function AgendamentosList() {
   const [equipamento, setEquipamento] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [openModalConclusao, setOpenModalConclusao] = useState(false);
+  const [agendamentoSelecionado, setAgendamentoSelecionado] = useState(null);
+  const [observacoes, setObservacoes] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -84,16 +87,10 @@ export default function AgendamentosList() {
                 <TableCell>
                   <EditIcon style={{ cursor: 'pointer', marginRight: 8 }} color="primary" onClick={() => navigate(`/agendamentos/${a.id}/editar`)} />
                   {a.status === 'Agendado' && (
-                    <DoneIcon style={{ cursor: 'pointer', marginRight: 8 }} color="success" onClick={async () => {
-                      if(window.confirm('Marcar como concluído?')) {
-                        const token = localStorage.getItem('token');
-                        await fetch(`${API_URL}/api/equipamentos/agendamentos/${a.id}/status`, {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                          body: JSON.stringify({ status: 'Concluído' })
-                        });
-                        AgendamentosList.fetchData();
-                      }
+                    <DoneIcon style={{ cursor: 'pointer', marginRight: 8 }} color="success" onClick={() => {
+                      setAgendamentoSelecionado(a);
+                      setObservacoes('');
+                      setOpenModalConclusao(true);
                     }} />
                   )}
                   {a.status === 'Agendado' && (
@@ -128,6 +125,41 @@ export default function AgendamentosList() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog open={openModalConclusao} onClose={() => setOpenModalConclusao(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Concluir Manutenção</DialogTitle>
+        <DialogContent sx={{ pt: 2 }}>
+          <TextField
+            label="Observações (o que foi feito)"
+            fullWidth
+            multiline
+            rows={4}
+            value={observacoes}
+            onChange={(e) => setObservacoes(e.target.value)}
+            placeholder="Ex: Relubrificação e troca de rolamento"
+            variant="outlined"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenModalConclusao(false)}>Cancelar</Button>
+          <Button 
+            onClick={async () => {
+              const token = localStorage.getItem('token');
+              await fetch(`${API_URL}/api/equipamentos/agendamentos/${agendamentoSelecionado.id}/status`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ status: 'Concluído', observacoes })
+              });
+              setOpenModalConclusao(false);
+              window.location.reload();
+            }}
+            variant="contained"
+            color="success"
+          >
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

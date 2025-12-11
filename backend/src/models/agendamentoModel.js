@@ -159,11 +159,18 @@ export async function atualizarAgendamento(id, agendamento) {
     };
 }
 
-export async function atualizarStatusAgendamento(id, status) {
+export async function atualizarStatusAgendamento(id, status, observacoes = null) {
     const collection = await getCollection('agendamentos');
+    const updateData = { status };
+    
+    // Se houver observações e o status é 'Concluído', adiciona as observações
+    if (observacoes && status === 'Concluído') {
+        updateData.observacoes = observacoes;
+    }
+    
     await collection.updateOne(
         { _id: new ObjectId(id) },
-        { $set: { status } }
+        { $set: updateData }
     );
 
     const updatedAgendamento = await collection.findOne({ _id: new ObjectId(id) });
