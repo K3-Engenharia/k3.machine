@@ -8,8 +8,6 @@ import logo from '../assets/logo.png';
 import AdminActionsMenu from '../components/AdminActionsAccordion';
 import API_URL from '../services/apiConfig';
 
-console.log('API_URL:', API_URL);
-
 const statusColors = {
   'Em Operação': 'success',
   'Em Manutenção': 'warning',
@@ -49,11 +47,10 @@ export default function Dashboard() {
         });
         if (res.ok) {
           const data = await res.json();
-          console.log('Equipamentos recebidos:', data);
           setEquipamentos(data);
         }
       } catch (error) {
-        console.error('Erro ao buscar equipamentos:', error);
+        // Erro ao buscar equipamentos
       }
     }
     const token = localStorage.getItem('token');
