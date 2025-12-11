@@ -147,21 +147,27 @@ export default function Dashboard() {
             <Grid container spacing={2}>
               {equipamentosEmpresa.map(e => {
                 console.log('Equipamento:', e.nome, 'Foto presente:', !!e.foto, 'Tamanho foto:', e.foto ? e.foto.length : 0);
+                if (e.foto) {
+                  console.log('Início da foto:', e.foto.substring(0, 50));
+                }
                 return (
                   <Grid item xs={12} sm={6} md={4} lg={3} key={e.id}>
             <Card sx={{ minHeight: 200, boxShadow: 3, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <Box sx={{ height: 200, overflow: 'hidden', borderRadius: 1, mb: 1, backgroundColor: '#f0f0f0' }}>
+              <Box sx={{ height: 250, overflow: 'hidden', borderRadius: 1, mb: 1, backgroundColor: '#f0f0f0', position: 'relative' }}>
                 {e.foto && e.foto.startsWith('data:') ? (
                   <img
                     src={e.foto}
                     alt={e.nome}
+                    onLoad={() => console.log('✅ Imagem carregada com sucesso:', e.nome)}
                     style={{
                       width: '100%',
                       height: '100%',
-                      objectFit: 'cover'
+                      objectFit: 'cover',
+                      display: 'block'
                     }}
                     onError={(err) => {
-                      console.error('Erro ao carregar imagem de:', e.nome, err);
+                      console.error('❌ Erro ao carregar imagem de:', e.nome, err);
+                      console.error('Src da imagem:', e.foto.substring(0, 100));
                       err.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e0e0e0" width="400" height="300"/%3E%3C/svg%3E';
                     }}
                   />
