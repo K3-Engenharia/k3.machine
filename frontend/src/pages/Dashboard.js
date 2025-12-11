@@ -146,10 +146,6 @@ export default function Dashboard() {
 
             <Grid container spacing={2}>
               {equipamentosEmpresa.map(e => {
-                console.log('Equipamento:', e.nome, 'Foto presente:', !!e.foto, 'Tamanho foto:', e.foto ? e.foto.length : 0);
-                if (e.foto) {
-                  console.log('Início da foto:', e.foto.substring(0, 50));
-                }
                 return (
                   <Grid item xs={12} sm={6} md={4} lg={3} key={e.id}>
             <Card sx={{ minHeight: 200, boxShadow: 3, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -158,7 +154,6 @@ export default function Dashboard() {
                   <img
                     src={e.foto}
                     alt={e.nome}
-                    onLoad={() => console.log('✅ Imagem carregada com sucesso:', e.nome)}
                     style={{
                       width: '100%',
                       height: '100%',
@@ -229,18 +224,13 @@ export default function Dashboard() {
                 <Chip label={e.status || 'Em Operação'} color={statusColors[e.status] || 'default'} size="small" sx={{ mt: 1 }} />
                 {(() => {
                   try {
-                    console.log('Tentando formatar data para equipamento:', e.nome);
-                    console.log('Valor de proximo_agendamento:', e.proximo_agendamento);
-                    
                     // Se não houver data agendada, não mostra nada
                     if (!e.proximo_agendamento) {
-                      console.log('Sem agendamento para:', e.nome);
                       return null;
                     }
                     
                     // Validar formato da data
                     if (typeof e.proximo_agendamento !== 'string' || !e.proximo_agendamento.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
-                      console.error('Formato de data inválido:', e.proximo_agendamento);
                       return null;
                     }
                     
@@ -255,14 +245,12 @@ export default function Dashboard() {
                     });
                     
                     const data = new Date(e.proximo_agendamento);
-                    console.log('Data parseada:', data);
                     
                     if (isNaN(data.getTime())) {
-                      throw new Error('Data inválida após conversão');
+                      return null;
                     }
                     
                     const dataFormatada = formatter.format(data);
-                    console.log('Data formatada:', dataFormatada);
                     
                     return (
                       <Typography variant="body2" color="primary" sx={{ mt: 1 }}>

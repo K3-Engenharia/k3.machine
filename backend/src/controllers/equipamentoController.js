@@ -33,11 +33,6 @@ export async function listarEquipamentos(req, res) {
     } else {
       lista = [];
     }
-    // Debug logs
-    console.log('Total de equipamentos:', lista.length);
-    lista.forEach(eq => {
-      console.log(`Equipamento ${eq.nome}: foto presente: ${!!eq.foto}, tamanho: ${eq.foto ? eq.foto.length : 0}`);
-    });
     res.json(lista);
   } catch (e) {
     console.error('Erro ao listar equipamentos:', e);

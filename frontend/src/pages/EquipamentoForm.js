@@ -106,8 +106,6 @@ export default function EquipamentoForm() {
     try {
       const token = localStorage.getItem('token');
 
-      console.log('Formulário antes de enviar:', form);
-
       const res = await fetch(`${API_URL}/api/equipamentos`, {
         method: 'POST',
         headers: {

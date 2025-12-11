@@ -118,8 +118,6 @@ export default function EquipamentoEdit() {
         }
       });
 
-      console.log('Enviando dados:', { nome: dados.nome, empresa_id: dados.empresa_id, tipo: dados.tipo });
-
       const res = await fetch(`${API_URL}/api/equipamentos/${id}`, {
         method: 'PUT',
         headers: { 
