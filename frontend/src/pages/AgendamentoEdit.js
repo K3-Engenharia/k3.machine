@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Paper, Typography, TextField, Button, CircularProgress } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import BackToDashboardButton from '../components/BackToDashboardButton';
+import API_URL from '../services/apiConfig';
 
 export default function AgendamentoEdit() {
   const { agendamentoId } = useParams();
