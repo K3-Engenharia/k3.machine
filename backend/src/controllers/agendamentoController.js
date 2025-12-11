@@ -1,4 +1,4 @@
-import { criarAgendamento, listarAgendamentosPorEquipamento, atualizarAgendamento, atualizarStatusAgendamento } from '../models/agendamentoModel.js';
+import { criarAgendamento, listarAgendamentosPorEquipamento, atualizarAgendamento, atualizarStatusAgendamento, getAgendamentoById } from '../models/agendamentoModel.js';
 import { getCollection } from '../models/db.js';
 import { ObjectId } from 'mongodb';
 
@@ -51,5 +51,15 @@ export async function alterarStatusAgendamento(req, res) {
     res.json(atualizado);
   } catch (e) {
     res.status(500).json({ message: 'Erro ao atualizar status do agendamento' });
+  }
+}
+
+export async function buscarAgendamento(req, res) {
+  try {
+    const agendamento = await getAgendamentoById(req.params.agendamentoId);
+    if (!agendamento) return res.status(404).json({ message: 'Agendamento não encontrado' });
+    res.json(agendamento);
+  } catch (e) {
+    res.status(500).json({ message: 'Erro ao buscar agendamento' });
   }
 }

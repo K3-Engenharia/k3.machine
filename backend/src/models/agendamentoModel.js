@@ -133,6 +133,12 @@ export async function listarAgendamentosPorEquipamento(equipamento_id) {
     }));
 }
 
+export async function getAgendamentoById(id) {
+    const collection = await getCollection('agendamentos');
+    const agendamento = await collection.findOne({ _id: new ObjectId(id) });
+    return agendamento;
+}
+
 export async function atualizarAgendamento(id, agendamento) {
     const collection = await getCollection('agendamentos');
     const updateDoc = {

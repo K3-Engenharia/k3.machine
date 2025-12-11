@@ -16,12 +16,11 @@ export default function AgendamentoEdit() {
       setLoading(true);
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${API_URL}/api/equipamentos/${agendamentoId}/agendamentos`, {
+        const res = await fetch(`${API_URL}/api/equipamentos/agendamentos/${agendamentoId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Agendamento não encontrado');
-        const lista = await res.json();
-        const agendamento = lista.find(a => a.id === Number(agendamentoId));
+        const agendamento = await res.json();
         setForm(agendamento);
       } catch {
         setError('Erro ao buscar agendamento');
